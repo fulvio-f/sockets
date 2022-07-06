@@ -15,20 +15,17 @@ int main() {
     char buffer[BUFFER_LENGTH];
     struct sockaddr_un addr;
 
-    // Remove the UNIX path name from the file system
-    unlink(server_path);
-
-    // socket()
+    // socket() * Gets the file descriptor *
     sd1 = socket(AF_UNIX, SOCK_STREAM, 0);
     if (sd1 < 0) {
         perror("socket() Error ");
         return -1;
     }
 
-    // unlink()
+    // unlink() * Remove the link name *
     unlink(addr.sun_path);
 
-    // bind()
+    // bind() * Associating socket file descriptor with local address *
     memset(&addr, 0, sizeof(addr));
     addr.sun_family = AF_UNIX;
     strncpy(addr.sun_path, server_path, sizeof(addr.sun_path)-1);
@@ -40,7 +37,7 @@ int main() {
         return -1;
     }
 
-    // listen()
+    // listen() * Setting the number of connections allowed on the incoming queue *
     rc = listen(sd1, 10);
     if (rc < 0) {
         perror("listen() Error: ");
@@ -49,7 +46,7 @@ int main() {
 
     printf("Ready for connect().\n");
 
-    // accept()
+    // accept() * Creating new file descriptor after client connects *
     sd2 = accept(sd1, NULL, NULL);
     if (sd2 < 0) {
         perror("accept() Error: ");

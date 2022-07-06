@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     char buffer[BUFFER_LENGTH];
     struct sockaddr_un addr;
 
-    // socket()
+    // socket() * Gets the file descriptor *
     sd1 = socket(AF_UNIX, SOCK_STREAM, 0);
     if (sd1 < 0) {
         perror("socket() Error: ");
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     addr.sun_family = AF_UNIX;
     strcpy(addr.sun_path, server_path);
 
-    // connect()
+    // connect() * Establishes connection with the server *
     rc = connect(sd1, (struct sockaddr *)&addr, SUN_LEN(&addr));
     if (rc < 0) {
         perror("connect() Error:");
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     }
 
     // send() * Send message to server *
-    strcpy(buffer, "Hello server from client!");
+    strcpy(buffer, argv[1]);
     rc = send(sd1, buffer, sizeof(buffer), 0);
     if (rc < 0) {
         perror("send() Error: ");
